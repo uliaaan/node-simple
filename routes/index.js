@@ -2,11 +2,15 @@ const express = require('express')
 const router = express.Router()
 
 router.get('/', (req, res) => {
-  res.send(`<a href="/auth/google">google</a>`)
+  res.render(`index/welcome`)
 })
 
 router.get('/dashboard', (req, res) => {
-  res.send(`Dashboard`)
+  res.render(`index/dashboard`)
+})
+
+router.get('/about', (req, res) => {
+  res.render(`index/about`)
 })
 
 

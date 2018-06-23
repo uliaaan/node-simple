@@ -1,4 +1,6 @@
 const express = require('express')
+const path = require('path')
+const exphbs = require('express-handlebars')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
@@ -13,6 +15,7 @@ require('./config/passport')(passport)
 //Load Routes
 const index = require('./routes/index')
 const auth = require('./routes/auth')
+const stories = require('./routes/stories')
 
 //Load Keys
 const keys = require('./config/keys')
@@ -26,6 +29,12 @@ mongoose.connect(keys.mongoURI)
   .catch(err => console.log(err))
 
 const app = express()
+
+//Handlebars Middleware
+app.engine('handlebars', exphbs({
+  defaultLayout: 'main'
+}))
+app.set('view engine', 'handlebars')
 
 app.use(cookieParser())
 app.use(session({
@@ -44,9 +53,13 @@ app.use((req, res, next) => {
   next()
 })
 
+//Set static folder
+app.use(express.static(path.join(__dirname, 'public')))
+
 //Use Routes
 app.use('/', index)
 app.use('/auth', auth)
+app.use('/stories', stories)
 
 const port = process.env.PORT || 5000
 
